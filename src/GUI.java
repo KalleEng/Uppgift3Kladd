@@ -126,7 +126,7 @@ public class GUI extends JFrame {
                     buttonsForGrid[i][j].setText(String.valueOf(squareGrid[i][j]));
                 } else {
                     buttonsForGrid[i][j].setText("");
-                    if (i == squareGrid.length - 1 && j == squareGrid.length - 1){
+                    if (checkWin()){
                         buttonsForGrid[i][j].setBackground(Color.GREEN);
                     }else {
                         buttonsForGrid[i][j].setBackground(Color.RED);
