@@ -10,6 +10,8 @@ public class GUI extends JFrame {
     private JButton[][] buttonsForGrid = new JButton[4][4];
     private JButton newGameButton = new JButton("New Game");
 
+    ArrayList<Integer> num = new ArrayList<>();
+
     public GUI(){
         randomizerGrid();
         initiateGrid();
@@ -54,7 +56,6 @@ public class GUI extends JFrame {
 
 
     private void randomizerGrid(){
-        ArrayList<Integer> num = new ArrayList<>();
         for (int i = 1; i <= 15; i++){
             num.add(i);
         }
