@@ -16,7 +16,6 @@ public class GUI extends JFrame {
         //Målar upp startbrädet
         randomizerGrid();
         initiateGrid();
-        //updateGrid();
 
         //Kopplar newGameButton till random-funktion
         newGameButton.addActionListener(e -> {
