@@ -4,41 +4,54 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GUI extends JFrame {
-    private JPanel gridPanel = new JPanel(new GridLayout(4,4));
+    private final JPanel gridPanel = new JPanel(new GridLayout(4, 4));
     private JPanel bottomPanel = new JPanel();
-    private int[][] squareGrid = new int[4][4];
-    private JButton[][] buttonsForGrid = new JButton[4][4];
+    private final int[][] squareGrid = new int[4][4];
+    private final JButton[][] buttonsForGrid = new JButton[4][4];
     private JButton newGameButton = new JButton("New Game");
-    ArrayList<Integer> num = new ArrayList<>();
+    private JButton testWinButton = new JButton("Test win");
+    ArrayList<Integer> numberList = new ArrayList<>();
 
-    public GUI(){
+    public GUI() {
+        //Målar upp startbrädet
         randomizerGrid();
         initiateGrid();
-        //updateGrid();
-        newGameButton.addActionListener(e ->{
+        updateGrid();
+
+        //Kopplar newGameButton till random-funktion
+        newGameButton.addActionListener(e -> {
             randomizerGrid();
             updateGrid();
         });
 
         bottomPanel.add(newGameButton);
+        bottomPanel.add(testWinButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
         add(gridPanel);
 
-        setSize(600,600);
+        testWinButton.addActionListener(e -> {
+            testWin();
+            updateGrid();
+        });
+
+        setSize(600, 600);
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
-    private void initiateGrid(){
-        for (int i = 0; i < squareGrid.length; i++){
-            for (int j = 0; j < squareGrid[i].length; j++){
+
+
+    //Itererar över brädets grid och lägger in knappar på dess platser
+    private void initiateGrid() {
+        for (int i = 0; i < squareGrid.length; i++) {
+            for (int j = 0; j < squareGrid[i].length; j++) {
                 JButton newButton = new JButton();
-                newButton.setFont(new Font("Arial",Font.BOLD,18));
-                int finalI = i;
-                int finalJ = j;
-                newButton.addActionListener(e-> swapButtons(finalI,finalJ));
+                newButton.setFont(new Font("Arial", Font.BOLD, 18));
+                int buttonPosRow = i;
+                int buttonPosCol = j;
+                newButton.addActionListener(e -> swapButtons(buttonPosRow, buttonPosCol));
                 buttonsForGrid[i][j] = newButton;
                 gridPanel.add(newButton);
             }
@@ -46,42 +59,68 @@ public class GUI extends JFrame {
         updateGrid();
     }
 
-    private void swapButtons(int finalI, int finalJ) {
+    //Byter plats på klickad knapp om rutan bredvid är tom
+    private void swapButtons(int buttonPosRow, int buttonPosCol) {
         Point emptyPosition = findEmptyPosition();
         if (emptyPosition != null) {
-            if (isAdjacent(finalI,finalJ,emptyPosition)){
-                squareGrid[emptyPosition.x][emptyPosition.y] = squareGrid[finalI][finalJ];
-                squareGrid[finalI][finalJ] = 0;
+            if (isAdjacent(buttonPosRow, buttonPosCol, emptyPosition)) {
+                //tar position x+y från emptyButton och byter plats på klickad knapp
+                squareGrid[emptyPosition.x][emptyPosition.y] = squareGrid[buttonPosRow][buttonPosCol];
+                //Sätter värdet på den klickade knappen till 0, vilket är värdet av emptyButton
+                squareGrid[buttonPosRow][buttonPosCol] = 0;
                 updateGrid();
+                //Kollar efter varje klickad knapp om spelet är vunnet
+                if (checkWin()) {
+                    JOptionPane.showMessageDialog(null, "You won!");
+                }
             }
         }
     }
 
-    private boolean isAdjacent(int finalI, int finalJ, Point emptyPosition) {
-        return Math.abs(emptyPosition.x-finalI) + Math.abs(emptyPosition.y-finalJ) ==1;
+
+    private boolean checkWin() {
+        //Använder numberListIndex som kontrollvärde när vi itererar över gridet för att se ifall värden stämmer överens.
+        for (int i = 0, numberListIndex = 0; i < squareGrid.length; i++) {
+            for (int j = 0; j < squareGrid[i].length; j++, numberListIndex++) {
+                if (squareGrid[i][j] != numberList.get(numberListIndex)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isAdjacent(int buttonPosRow, int buttonPosCol, Point emptyPosition) {
+        //Kollar ifall den klickade knappen är på samma rad och om kolumnen ligger bredvid
+        boolean sameRow = buttonPosRow == emptyPosition.x && (buttonPosCol == emptyPosition.y - 1 || buttonPosCol == emptyPosition.y + 1);
+
+        //Kollar ifall den klickade knappen är på samma kolumn och om raden ligger bredvid
+        boolean sameCol = buttonPosCol == emptyPosition.y && (buttonPosRow == emptyPosition.x - 1 || buttonPosRow == emptyPosition.x + 1);
+
+        return sameRow || sameCol;
     }
 
     private Point findEmptyPosition() {
+        //Itererar över gridet och tar ut positionen på knappen med värdet 0 (emptyButton)
         for (int i = 0; i < squareGrid.length; i++) {
             for (int j = 0; j < squareGrid[i].length; j++) {
-                if(squareGrid[i][j] == 0){
-                    return new Point(i,j);
+                if (squareGrid[i][j] == 0) {
+                    return new Point(i, j);
                 }
-                
+
             }
-            
+
         }
         return null;
     }
 
-
-    private void updateGrid(){
-        for (int i = 0; i < squareGrid.length; i++){
-            for (int j = 0; j < squareGrid[i].length; j++){
-                if (squareGrid[i][j] != 0){
+    //Bestämmer var knappar med siffror ska sättas in och var emptyButton ska sättas in.
+    private void updateGrid() {
+        for (int i = 0; i < squareGrid.length; i++) {
+            for (int j = 0; j < squareGrid[i].length; j++) {
+                if (squareGrid[i][j] != 0) {
                     buttonsForGrid[i][j].setText(String.valueOf(squareGrid[i][j]));
-                }
-                else{
+                } else {
                     buttonsForGrid[i][j].setText("");
                 }
             }
@@ -89,21 +128,37 @@ public class GUI extends JFrame {
     }
 
 
-    private void randomizerGrid(){
-        num.clear();
-        for (int i = 1; i <= 15; i++){
-            num.add(i);
+    private void randomizerGrid() {
+        numberList.clear();
+        for (int i = 1; i <= 15; i++) {
+            numberList.add(i);
         }
-        num.add(0);
+        numberList.add(0);
 
-        Collections.shuffle(num);
+        Collections.shuffle(numberList);
 
         int index = 0;
-        for (int i = 0; i < squareGrid.length; i++){
-            for (int j = 0; j < squareGrid[i].length; j++){
-                squareGrid[i][j] = num.get(index++);
+        for (int i = 0; i < squareGrid.length; i++) {
+            for (int j = 0; j < squareGrid[i].length; j++) {
+                squareGrid[i][j] = numberList.get(index++);
             }
         }
     }
 
+
+    private void testWin() {
+        numberList.clear();
+        for (int i = 1; i <= 15; i++) {
+            numberList.add(i);
+        }
+        numberList.add(0);
+
+        int index = 0;
+        for (int i = 0; i < squareGrid.length; i++) {
+            for (int j = 0; j < squareGrid[i].length; j++) {
+                squareGrid[i][j] = numberList.get(index++);
+            }
+        }
+
+    }
 }
