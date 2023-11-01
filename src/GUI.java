@@ -20,6 +20,7 @@ public class GUI extends JFrame {
             randomizerGrid();
             updateGrid();
         });
+        newGameButton.setBackground(Color.GREEN);
 
         bottomPanel.add(newGameButton);
         add(bottomPanel, BorderLayout.SOUTH);
