@@ -14,7 +14,7 @@ public class GUI extends JFrame {
     public GUI(){
         randomizerGrid();
         initiateGrid();
-        updateGrid();
+        //updateGrid();
         newGameButton.addActionListener(e ->{
             randomizerGrid();
             updateGrid();
@@ -35,6 +35,7 @@ public class GUI extends JFrame {
         for (int i = 0; i < squareGrid.length; i++){
             for (int j = 0; j < squareGrid[i].length; j++){
                 JButton newButton = new JButton();
+                newButton.setFont(new Font("Arial",Font.BOLD,18));
                 int finalI = i;
                 int finalJ = j;
                 newButton.addActionListener(e-> swapButtons(finalI,finalJ));
@@ -89,6 +90,7 @@ public class GUI extends JFrame {
 
 
     private void randomizerGrid(){
+        num.clear();
         for (int i = 1; i <= 15; i++){
             num.add(i);
         }
