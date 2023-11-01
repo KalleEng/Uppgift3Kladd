@@ -127,9 +127,9 @@ public class GUI extends JFrame {
                 } else {
                     buttonsForGrid[i][j].setText("");
                     if (checkWin()){
-                        buttonsForGrid[i][j].setBackground(Color.GREEN);
+                        buttonsForGrid[i][j].setBackground(new Color(51, 255, 51));
                     }else {
-                        buttonsForGrid[i][j].setBackground(Color.RED);
+                        buttonsForGrid[i][j].setBackground(new Color(255, 51, 51));
                     }
                 }
             }
