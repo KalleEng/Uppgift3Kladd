@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-
+//Jakobs branch
 public class GUI extends JFrame {
     private JPanel gridPanel = new JPanel(new GridLayout(4,4));
     private JPanel bottomPanel = new JPanel();
