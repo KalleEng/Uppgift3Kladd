@@ -120,10 +120,17 @@ public class GUI extends JFrame {
     private void updateGrid() {
         for (int i = 0; i < squareGrid.length; i++) {
             for (int j = 0; j < squareGrid[i].length; j++) {
+                buttonsForGrid[i][j].setBackground(null);
+                buttonsForGrid[i][j].setOpaque(true);
                 if (squareGrid[i][j] != 0) {
                     buttonsForGrid[i][j].setText(String.valueOf(squareGrid[i][j]));
                 } else {
                     buttonsForGrid[i][j].setText("");
+                    if (i == squareGrid.length - 1 && j == squareGrid.length - 1){
+                        buttonsForGrid[i][j].setBackground(Color.GREEN);
+                    }else {
+                        buttonsForGrid[i][j].setBackground(Color.RED);
+                    }
                 }
             }
         }
