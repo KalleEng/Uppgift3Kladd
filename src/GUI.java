@@ -16,7 +16,7 @@ public class GUI extends JFrame {
         //Målar upp startbrädet
         randomizerGrid();
         initiateGrid();
-        updateGrid();
+        //updateGrid();
 
         //Kopplar newGameButton till random-funktion
         newGameButton.addActionListener(e -> {
@@ -79,15 +79,18 @@ public class GUI extends JFrame {
 
 
     private boolean checkWin() {
-        //Använder numberListIndex som kontrollvärde när vi itererar över gridet för att se ifall värden stämmer överens.
-        for (int i = 0, numberListIndex = 0; i < squareGrid.length; i++) {
-            for (int j = 0; j < squareGrid[i].length; j++, numberListIndex++) {
-                if (squareGrid[i][j] != numberList.get(numberListIndex)) {
+
+        int count = 1;
+        for (int i = 0; i < squareGrid.length; i++) {
+            for (int j = 0; j < squareGrid[i].length; j++) {
+                if (squareGrid[i][j] != count && count != 16) {
                     return false;
                 }
+                count++;
             }
         }
-        return true;
+
+        return squareGrid[3][3] == 0;
     }
 
     private boolean isAdjacent(int buttonPosRow, int buttonPosCol, Point emptyPosition) {
